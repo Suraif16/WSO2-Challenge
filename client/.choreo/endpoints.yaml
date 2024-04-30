@@ -27,10 +27,10 @@ outbound:
       connectionConfig: 01ef071d-4bdd-1120-88fc-742be6d44299
       env:
       - from: ServiceURL
-        to: <YOUR_ENV_VARIABLE_NAME_HERE>
+        to: https://33a4bce1-d2c6-4e71-959c-b9e2c0a7b980-dev.e1-us-cdp-2.choreoapis.dev/wso2challenge/ballerina/login-1a3/v1
       - from: ConsumerKey
-        to: <YOUR_ENV_VARIABLE_NAME_HERE>
+        to: Ay6J1fSIcj0M9w7JNzYrNLWIo2Qa
       - from: ConsumerSecret
-        to: <YOUR_ENV_VARIABLE_NAME_HERE>
+        to: lwfMzrC4bjS6KqXRBXhu9fURt5Aa
       - from: TokenURL
-        to: <YOUR_ENV_VARIABLE_NAME_HERE>
+        to: https://sts.choreo.dev/oauth2/token
