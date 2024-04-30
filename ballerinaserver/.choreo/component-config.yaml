@@ -1,0 +1,13 @@
+outbound:
+    serviceReferences:
+    - name: choreo:///suraif16/wso2challenge/sbtrjv/1a36d/v1/PUBLIC
+      connectionConfig: 01ef071f-3537-1bae-82e2-3de15428487b
+      env:
+      - from: ServiceURL
+        to: https://33a4bce1-d2c6-4e71-959c-b9e2c0a7b980-dev.e1-us-cdp-2.choreoapis.dev/wso2challenge/ballerina/login-1a3/v1
+      - from: ConsumerKey
+        to: JewH6wi2LBoSbsMhIS_kqMMajGEa
+      - from: ConsumerSecret
+        to: 9CFGs2Uw1UqtOwesbYg5rF1xK14a
+      - from: TokenURL
+        to: https://sts.choreo.dev/oauth2/token
