@@ -1,0 +1,5 @@
+cypress-automation-framework/cypress/report/*
+cypress-automation-framework/cypress/screenshots/*
+cypress-automation-framework/cypress/videos/*
+server/.env
+cypress-automation-framework/node_modules/*

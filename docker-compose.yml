@@ -1,0 +1,106 @@
+version: "3.8"
+services:
+    # Mysql database container
+    db:
+        image: mysql:8.3.0
+        container_name: tutorial_db_symfony
+        restart: no
+        # volumes:
+        #     - db-data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root1234
+            MYSQL_DATABASE: angular
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        networks:
+            - tutorial
+
+    # phpmyadmin container
+    phpmyadmin:
+        image: phpmyadmin
+        container_name: tutorial_phpmyadmin
+        restart: no
+        depends_on:
+            - db
+        ports:
+            - 8081:80
+        environment:
+            PMA_HOST: db
+        networks:
+            - tutorial
+
+    # Symfony apache project container
+    symfony:
+        build: docker/php
+        container_name: tutorial_symfony
+        ports:
+            - 8000:80
+        volumes:
+            - ./docker/php/vhosts:/etc/apache2/sites-enabled
+            - ./server:/var/www
+        restart: no
+        depends_on:
+            - db
+        healthcheck:
+            test:  test /tmp/server-setup-done
+            interval: 45s
+            retries: 30 
+        networks:
+            - tutorial
+        command: /bin/sh -c "cd /var/www && sh ./startup.sh && apache2-foreground"
+
+    angular:
+        image: node:18
+        container_name: tutorial_angular
+        working_dir: /home/node/app
+        ports:
+            - 4200:4200 
+        volumes:
+            - ./client:/home/node/app
+        restart: no
+        healthcheck:
+            test: curl http://localhost:4200
+            interval: 45s
+            retries: 30
+        networks:
+            - tutorial
+        command: /bin/sh -c "npm install -g @angular/cli && npm install && ng serve --host 0.0.0.0 --port 4200 "
+    
+    cypress:
+        image: cypress
+        build: ./cypress-automation-framework
+        container_name: tutorial_cypress
+        tty: true
+        working_dir: /app/
+        volumes:
+            - ./cypress-automation-framework:/app
+            # - ./cypress-automation-framework/cypress:/app/cypress
+            # - ./cypress-automation-framework/cypress.config.js:/app/cypress.config.js
+        ports:
+          - 8080:8080
+        restart: no
+        healthcheck:
+            test:  test -f cypress-automation-framework/cypress/videos/viewstudent.js.mp4
+            interval: 45s
+            retries: 30
+        depends_on:
+            angular:
+                condition: service_healthy
+            symfony:
+                condition: service_healthy
+        entrypoint: /bin/sh -c "npm install && cypress run"
+        networks:
+            - tutorial
+
+    busybox:
+        image: busybox:latest
+        container_name: tutorial_busybox
+        depends_on:
+            cypress: 
+                condition: service_healthy
+        networks:
+            - tutorial
+networks:
+    tutorial:
+
+volumes:
+    db-data:

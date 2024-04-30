@@ -1,0 +1,17 @@
+stages:
+  - test
+
+test:
+  image: docker:24.0.9
+  services:
+  - docker:dind
+  stage: test
+  script:
+    - pwd
+    - chmod +x initiate.sh
+    - ./initiate.sh
+
+  artifacts:
+    paths:
+      - /builds/Suraif16/angular-crud-app2/cypress-automation-framework/cypress/report/
+    when: always
